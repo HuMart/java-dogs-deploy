@@ -14,21 +14,18 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler
-{
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe, HttpServletRequest request)
-    {
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe, HttpServletRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
         errorDetail.setTitle("Resource Not Found");
         errorDetail.setDetail(rnfe.getMessage());
@@ -41,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request)
     {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle(ex.getPropertyName());
         errorDetail.setDetail(ex.getMessage());
@@ -51,14 +48,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request)
-    {
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
         errorDetail.setTitle(ex.getRequestURL());
         errorDetail.setDetail(request.getDescription(true));
-        errorDetail.setDeveloperMessage("Rest Handler Not Found (check for valid URI");
+        errorDetail.setDeveloperMessage("Rest Handler Not Found (check for valid URI)");
 
         return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
     }

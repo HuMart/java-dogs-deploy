@@ -24,7 +24,7 @@ import java.util.Date;
 public class DogController {
     private static final Logger logger = LoggerFactory.getLogger(DogController.class);
 
-    @Autowired
+//    @Autowired
 //    RabbitTemplate rt;
 
     // localhost:2019/dogs/dogs
@@ -33,7 +33,7 @@ public class DogController {
         logger.info("/dogs/dogs was accessed");
 //        MessageDetail message = new MessageDetail("/dogs/dogs was accessed at " + new Date(), 7, false);
 //        rt.convertAndSend(DogsinitialApplication.QUEUE_NAME_DOGS, message);
-
+//
         return new ResponseEntity<>(DogsinitialApplication.ourDogList.dogList, HttpStatus.OK);
     }
 
@@ -72,7 +72,8 @@ public class DogController {
 
     // localhost:2019
     @GetMapping(value = "/dogstable")
-    public ModelAndView displayDogsTable() {
+    public ModelAndView displayDogsTable()
+    {
         logger.info("/dogs/dogstable was accessed");
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dogs");
@@ -82,7 +83,8 @@ public class DogController {
     }
 
     @GetMapping(value = "/aptdogs")
-    public ModelAndView displayAptDogsTable() {
+    public ModelAndView displayAptDogsTable()
+    {
         logger.info("/dogs/aptdogs was accessed");
         ArrayList<Dog> aptDogs = DogsinitialApplication.ourDogList.
                 findDogs(d -> d.isApartmentSuitable());
