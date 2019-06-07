@@ -3,11 +3,11 @@ package com.lambdaschool.dogsinitial.controller;
 import com.lambdaschool.dogsinitial.DogsinitialApplication;
 import com.lambdaschool.dogsinitial.exception.ResourceNotFoundException;
 import com.lambdaschool.dogsinitial.model.Dog;
-import com.lambdaschool.dogsinitial.model.MessageDetail;
+//import com.lambdaschool.dogsinitial.model.MessageDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,21 +28,25 @@ public class DogController {
 //    RabbitTemplate rt;
 
     // localhost:2019/dogs/dogs
-    @GetMapping(value = "/dogs")
-    public ResponseEntity<?> getAllDogs() {
+    @GetMapping(value = "/dogs",
+                produces = {"aplication/json"})
+    public ResponseEntity<?> getAllDogs()
+    {
         logger.info("/dogs/dogs was accessed");
 //        MessageDetail message = new MessageDetail("/dogs/dogs was accessed at " + new Date(), 7, false);
 //        rt.convertAndSend(DogsinitialApplication.QUEUE_NAME_DOGS, message);
-//
+        DogsinitialApplication.ourDogList.dogList.sort((d1, d2) -> d1.getBreed().compareToIgnoreCase(d2.getBreed()));
         return new ResponseEntity<>(DogsinitialApplication.ourDogList.dogList, HttpStatus.OK);
     }
 
     // localhost:2019/dogs/{id}
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}",
+                produces = {"application/json"})
     public ResponseEntity<?> getDogDetail(
             @PathVariable
-                    long id) {
-        logger.info("/dogs/" + id + " was accessed");
+                    long id)
+    {
+        logger.trace("/dogs/" + id + " was accessed");
         Dog rtnDog;
         if (DogsinitialApplication.ourDogList.findDog(d -> (d.getId() == id)) == null) {
             throw new ResourceNotFoundException("Dog with ID " + id + " not found.");
@@ -54,7 +58,8 @@ public class DogController {
     }
 
     // localhost:2019/dogs/breeds/{breed}
-    @GetMapping(value = "/breeds/{breed}")
+    @GetMapping(value = "/breeds/{breed}",
+                produces ={"application/json"})
     public ResponseEntity<?> getDogBreeds(
             @PathVariable
                     String breed) {
@@ -77,6 +82,7 @@ public class DogController {
         logger.info("/dogs/dogstable was accessed");
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dogs");
+        DogsinitialApplication.ourDogList.dogList.sort((d1, d2) -> d1.getBreed().compareToIgnoreCase(d2.getBreed()));
         mav.addObject("dogList", DogsinitialApplication.ourDogList.dogList);
 
         return mav;
